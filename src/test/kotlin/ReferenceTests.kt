@@ -29,8 +29,13 @@ class ReferenceTests {
     }
 
     @Test
-    fun trivialNoInstanceTest() {
+    fun trivialNoInstanceTest1() {
         this.assertNoInstance("(A) ^ (~A)")
+    }
+
+    @Test
+    fun trivialNoInstanceTest2() {
+        this.assertNoInstance("(A v A v A) ^ (~A v ~A v ~A)")
     }
 
     /**
