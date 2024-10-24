@@ -7,7 +7,7 @@ import org.example.cnf.Variable
 import org.example.graph.Edge
 import org.example.graph.Graph
 import org.example.graph.Vertex
-import org.example.graph._3ColoringSolver
+import org.example.graph.Slow3ColoringSolver
 
 /**
  * @brief reference implementation
@@ -78,7 +78,7 @@ class _3SatSolver {
      * @brief reference solver
      */
     fun solve(cnf: CNF): Boolean {
-        val _3coloringSolver = _3ColoringSolver()
+        val _3coloringSolver = Slow3ColoringSolver()
         return _3coloringSolver.solve(this.reduceTo3Coloring(cnf))
     }
 }

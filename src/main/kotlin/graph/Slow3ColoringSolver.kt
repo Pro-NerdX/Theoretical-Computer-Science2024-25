@@ -4,7 +4,7 @@ package org.example.graph
  * @brief 3Col-Solver.
  * @see solve
  */
-class _3ColoringSolver {
+class Slow3ColoringSolver {
     /**
      * @author this is a real fvcking slow algorithm
      */

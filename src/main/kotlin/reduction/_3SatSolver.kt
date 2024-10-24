@@ -2,7 +2,7 @@ package org.example.reduction
 
 import org.example.cnf.CNF
 import org.example.graph.Graph
-import org.example.graph._3ColoringSolver
+import org.example.graph.Slow3ColoringSolver
 
 /**
  * @author here goes your implementation
@@ -16,11 +16,9 @@ class _3SatSolver {
     }
 
     /**
-     * @author first use the reduction function to get a [Graph] and then use [_3ColoringSolver.solve] to solve 3Sat.
+     * @author first use the reduction function to get a [Graph] and then use [Slow3ColoringSolver.solve] to solve 3Sat.
      */
     fun solve(cnf: CNF): Boolean {
-        val _3coloringSolver = _3ColoringSolver()
-
         TODO()
     }
 }

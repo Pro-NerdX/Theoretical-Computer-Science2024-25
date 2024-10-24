@@ -1,5 +1,7 @@
 package org.example.graph
 
+const val END_OF_LINE = "0\n"
+
 data class Graph(
     val edges: List<Edge>
 ) {
@@ -15,29 +17,78 @@ data class Graph(
         this.vertices = vertices
     }
 
-    fun getEdges(vertex: Vertex): List<Edge> {
-        return this.edges.filter { it.contains(vertex) }
-    }
-
-    fun isFullyColored(): Boolean {
-        this.vertices.forEach {
-            if (it.assignment == null) return false
-        }
-        return true
-    }
-
+    /**
+     * @brief checks, whether the given coloring of the graph is valid.
+     */
     fun hasValidColoring(): Boolean {
         this.edges.forEach {
-            if (it.v1.assignment == it.v2.assignment) return false
+            if (it.v1.assignment == it.v2.assignment || it.v1.assignment == null || it.v2.assignment == null) {
+                return false
+            }
         }
         return true
     }
 
-    fun colorWouldWorkForVertexTemporarily(color: Color, vertex: Vertex): Boolean {
-        val initialAssignment: Color? = vertex.assignment
-        vertex.assignment = color
-        val result = this.hasValidColoring()
-        vertex.assignment = initialAssignment
+    /**
+     * @brief converts the graph into a cnf structure for 3Coloring
+     *
+     * @return [String], because the string will be written to a file at the end.
+     *
+     * @author for each integer i, we have:
+     * - i+0 refers to X_red
+     * - i+1 refers to X_green
+     * - i+2 refers to X_blue
+     */
+    fun convertToCNF(): String {
+        var cnfString = ""
+
+        // Setup
+        val nameMap: Map<String, Int> = this.generateNameMap()
+        var numberOfVariables = 0
+        var numberOfClauses = 0
+
+        // Enforce the variables to have exactly 1 possible color
+        nameMap.entries.forEach {
+            val red: Int = it.value
+            val green: Int = red + 1
+            val blue: Int = green + 1
+            numberOfVariables += 3
+
+            cnfString += "$red $green $blue$END_OF_LINE"
+            cnfString += "${-red} ${-green}$END_OF_LINE"
+            cnfString += "${-green} ${-blue}$END_OF_LINE"
+            cnfString += "${-blue} ${-red}$END_OF_LINE"
+            numberOfClauses += 4
+        }
+
+        // Enforce no 2 adjacent vertices to have the same color
+        this.edges.forEach {
+            val x: Int = nameMap[it.v1.name] ?: error("won't happen, trust me")
+            val y: Int = nameMap[it.v2.name] ?: error("read other error message")
+
+            for (i: Int in 0..2) {
+                val xCol: Int = x + i
+                val yCol: Int = y + i
+
+                cnfString += "$xCol $yCol$END_OF_LINE"
+                cnfString += "${-xCol} ${-yCol}$END_OF_LINE"
+                numberOfClauses += 2
+            }
+        }
+
+        return "p cnf $numberOfVariables $numberOfClauses\n$cnfString"
+    }
+
+    /**
+     * @brief maps the name of each vertex to a unique integer.
+     */
+    private fun generateNameMap(): Map<String, Int> {
+        val result: MutableMap<String, Int> = mutableMapOf()
+        var indexOfVertex = 1
+        for (vertex: Vertex in this.vertices) {
+            result[vertex.name] = indexOfVertex
+            indexOfVertex += 3
+        }
         return result
     }
 }
