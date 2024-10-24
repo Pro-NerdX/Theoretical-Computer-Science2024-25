@@ -26,3 +26,9 @@ The strings given to the `CNFFactory` must match the following pattern:
 "~(A v B) ^ ~(C v D)"
 "(ThisIsAnInvalidName)"
 ```
+
+## External Sources
+
+### Glucose 4.1
+
+The executable is contained inside the `glucose` directory. You can find more infos about `glucose` at [https://github.com/jakublevy/glucose-win/releases/tag/v4.1](https://github.com/jakublevy/glucose-win/releases/tag/v4.1)
